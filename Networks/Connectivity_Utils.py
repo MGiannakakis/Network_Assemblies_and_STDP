@@ -31,6 +31,26 @@ def get_out_group_connectivity(pre, post, prob):
                     In.append(j)
     return Out, In
 
+
+def get_recurrent_connectivity(pre, post, prob_in, prob_out, w_in, w_out, w_noise = 1e-1):
+    Out = []
+    In = []
+    W = []
+    for i in range(len(pre)):
+        for j in range(len(post)):
+            if pre[i] == post[j]:
+                if rand() < prob_in:
+                    Out.append(i)
+                    In.append(j)
+                    W.append(w_in + w_noise*w_in*randn())
+            else:
+                if rand() < prob_out:
+                    Out.append(i)
+                    In.append(j) 
+                    W.append(w_out + w_noise*w_out*randn())
+    return Out, In, W
+
+
 def get_con_params_p(NSigs, r, V):
     d = (NSigs - 1) * (r + 1)
 
