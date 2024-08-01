@@ -41,11 +41,10 @@ def get_filtered_spikes(spikes, tau):
 def get_con_params(NSigs, r, V):
     d = (NSigs - 1) * (r + 1)
 
-    v_in = (NSigs * r - r - 1) * NSigs * V / d
+    v_in = r * (NSigs - 1) * NSigs * V / d
     v_out = NSigs * V / d
 
     return v_in, v_out
-
 
 def get_cor(Sp, NSigs):
     sp = np.array(Sp)
