@@ -20,7 +20,7 @@ def get_out_group_connectivity(pre, post, prob):
     In = []
     for i in range(len(pre)):
         for j in range(len(post)):
-           # if pre[i] != post[j]:
+            if pre[i] != post[j]:
                 if rand() < prob:
                     Out.append(i)
                     In.append(j)
