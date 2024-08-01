@@ -155,64 +155,38 @@ def Network_get_Stats(W = 0.0,
     Noise_Synapses = Synapses(Noise, P, on_pre='g_ampa += w_input*gBarEx*nS')
     Noise_Synapses.connect(condition='i==j')
                   
-    #######################################
-    # Recurrent connections Between Groups
-    #######################################
-    
-    i_s = gBarEx/(gBarIn*(1-ExFrac))
+########################
+# Recurrent connections 
+########################
+
+# Inhibitory scaling
+i_s = gBarEx/(gBarIn*(1-ExFrac))
 
 
-    if p_ee_out > 0:
-        R_ee = Synapses(Pe, Pe, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-        I, J = get_out_group_connectivity(InputGroup[:NE], InputGroup[:NE], p_ee_out)
-        R_ee.connect(i=I, j=J)
-        R_ee.w = w_ee_out + 0.1*w_ee_out*randn(len(R_ee.w))
+if p > 0:
+    R_ee = Synapses(Pe, Pe, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
+    I, J, W = get_recurrent_connectivity(InputGroup[:NE], InputGroup[:NE],
+                                         p, p, w_ee_in, w_ee_out)
+    R_ee.connect(i=I, j=J)
+    R_ee.w = W
 
-    if p_ei_out > 0:
-        R_ei = Synapses(Pe, Pi, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-        I, J = get_out_group_connectivity(InputGroup[:NE], InputGroup[NE:], p_ei_out)
-        R_ei.connect(i=I, j=J)
-        R_ei.w = w_ei_out + 0.1*w_ei_out*randn(len(R_ei.w))
+    R_ei = Synapses(Pe, Pi, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
+    I, J, W = get_recurrent_connectivity(InputGroup[:NE], InputGroup[NE:],
+                                         p, p, w_ei_in, w_ei_out)
+    R_ei.connect(i=I, j=J)
+    R_ei.w = W
 
-    if p_ie_out > 0:
-        R_ie = Synapses(Pi, Pe, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-        I, J = get_out_group_connectivity(InputGroup[NE:], InputGroup[:NE], p_ie_out)
-        R_ie.connect(i=I, j=J)
-        R_ie.w = w_ie_out + 0.1*w_ie_out*randn(len(R_ie.w))
+    R_ie = Synapses(Pi, Pe, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
+    I, J, W = get_recurrent_connectivity(InputGroup[NE:], InputGroup[:NE],
+                                         p, p, w_ie_in, w_ie_out)
+    R_ie.connect(i=I, j=J)
+    R_ie.w = W
 
-    if p_ii_out > 0:
-        R_ii = Synapses(Pi, Pi, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-        I, J = get_out_group_connectivity(InputGroup[NE:], InputGroup[NE:], p_ii_out)
-        R_ii.connect(i=I, j=J)
-        R_ii.w = w_ii_out + 0.1*w_ii_out*randn(len(R_ii.w))
-      
-    #######################################
-    # Recurrent connections Within Groups
-    #######################################
-
-    if p_ee_in > 0:
-        R_ee_group = Synapses(Pe, Pe, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-        I, J = get_in_group_connectivity(InputGroup[:NE], InputGroup[:NE], p_ee_in)
-        R_ee_group.connect(i=I, j=J)
-        R_ee_group.w = w_ee_in + 0.1*w_ee_in*randn(len(R_ee_group.w))
-
-    if p_ei_in > 0:
-        R_ei_group = Synapses(Pe, Pi, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-        I, J = get_in_group_connectivity(InputGroup[:NE], InputGroup[NE:], p_ei_in)
-        R_ei_group.connect(i=I, j=J)
-        R_ei_group.w = w_ei_in + 0.1*w_ei_in*randn(len(R_ei_group.w))
-
-    if p_ie_in > 0:
-        R_ie_group = Synapses(Pi, Pe, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-        I, J = get_in_group_connectivity(InputGroup[NE:], InputGroup[:NE], p_ie_in)
-        R_ie_group.connect(i=I, j=J)
-        R_ie_group.w = w_ie_in + 0.1*w_ie_in*randn(len(R_ie_group.w))
-
-    if p_ii_in > 0:
-        R_ii_group = Synapses(Pi, Pi, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-        I, J = get_in_group_connectivity(InputGroup[NE:], InputGroup[NE:], p_ii_in)
-        R_ii_group.connect(i=I, j=J)
-        R_ii_group.w = w_ii_in + 0.1*w_ii_in*randn(len(R_ii_group.w))
+    R_ii = Synapses(Pi, Pi, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
+    I, J, W = get_recurrent_connectivity(InputGroup[NE:], InputGroup[NE:],
+                                         p, p, w_ii_in, w_ii_out)
+    R_ii.connect(i=I, j=J)
+    R_ii.w = W
 
     #############################
     # Excitatory Plasticity
