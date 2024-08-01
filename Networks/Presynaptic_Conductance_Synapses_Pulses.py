@@ -144,33 +144,7 @@ def Network_get_Stats(W = 0.0,
     Noise_Synapses = Synapses(Noise, P, on_pre='g_ampa += w_input*gBarEx*nS')
     Noise_Synapses.connect(condition='i==j')
 
-    #######################################
-    # Recurrent connections Between Groups
-    #######################################
-    
-    i_s = gBarEx/(gBarIn*(1-ExFrac))
-
-
-    if p_ee_out > 0:
-        R_ee = Synapses(Pe, Pe, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-        R_ee.connect(p=p_ee_out)
-        R_ee.w = w_ee_out + 0.1*w_ee_out*randn(len(R_ee.w))
-
-    if p_ei_out > 0:
-        R_ei = Synapses(Pe, Pi, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-        R_ei.connect(p=p_ei_out)
-        R_ei.w = w_ei_out + 0.1*w_ei_out*randn(len(R_ei.w))
-
-    if p_ie_out > 0:
-        R_ie = Synapses(Pi, Pe, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-        R_ie.connect(p=p_ie_out)
-        R_ie.w = w_ie_out + 0.1*w_ie_out*randn(len(R_ie.w))
-
-    if p_ii_out > 0:
-        R_ii = Synapses(Pi, Pi, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-        R_ii.connect(p=p_ii_out)
-        R_ii.w = w_ii_out + 0.1*w_ii_out*randn(len(R_ii.w))
-
+v
     #######################################
     # Recurrent connections Within Groups
     #######################################
@@ -198,8 +172,7 @@ def Network_get_Stats(W = 0.0,
         I, J = get_in_group_connectivity(InputGroup[NE:], InputGroup[NE:], p_ii_in)
         R_ii_group.connect(i=I, j=J)
         R_ii_group.w = w_ii_in + 0.1*w_ii_in*randn(len(R_ii_group.w))
-    
-
+  
    
     # ###########################################
     # Run Simulation without Plasticity
