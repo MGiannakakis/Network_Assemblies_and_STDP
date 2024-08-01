@@ -20,6 +20,16 @@ def get_in_group_connectivity(pre, post, prob):
                     In.append(j)
     return Out, In
 
+def get_out_group_connectivity(pre, post, prob):
+    Out = []
+    In = []
+    for i in range(len(pre)):
+        for j in range(len(post)):
+           # if pre[i] != post[j]:
+                if rand() < prob:
+                    Out.append(i)
+                    In.append(j)
+    return Out, In
 
 def get_con_params(NSigs, r, V):
     d = (NSigs - 1) * (r + 1)
