@@ -1,7 +1,7 @@
 from brian2 import *
 
 ########################
-# Connectivity Function
+# Connectivity Functions
 ########################
 def get_in_group_connectivity(pre, post, prob):
     Out = []
@@ -13,6 +13,18 @@ def get_in_group_connectivity(pre, post, prob):
                     Out.append(i)
                     In.append(j)
     return Out, In
+
+
+def get_out_group_connectivity(pre, post, prob):
+    Out = []
+    In = []
+    for i in range(len(pre)):
+        for j in range(len(post)):
+           # if pre[i] != post[j]:
+                if rand() < prob:
+                    Out.append(i)
+                    In.append(j)
+
 
 #####################################
 # Low pass filter
