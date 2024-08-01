@@ -182,20 +182,24 @@ def Network_run(W = 0.0,
 
     if p > 0:
         R_ee = Synapses(Pe, Pe, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-        R_ee.connect(p=p)
-        R_ee.w = w_ee_out + 0.1*w_ee_out*randn(len(R_ee.w))
-
+        I, J = get_out_group_connectivity(InputGroup[:NE], InputGroup[:NE], p)
+        R_ee.connect(i=I, j=J)
+        R_ee.w = w_ee_out + 1e-1*w_ee_out*randn(len(R_ee.w))
+    
         R_ei = Synapses(Pe, Pi, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-        R_ei.connect(p=p)
-        R_ei.w = w_ei_out + 0.1*w_ei_out*randn(len(R_ei.w))
-
+        I, J = get_out_group_connectivity(InputGroup[:NE], InputGroup[NE:], p)
+        R_ei.connect(i=I, j=J)
+        R_ei.w = w_ei_out + 1e-1*w_ei_out*randn(len(R_ei.w))
+    
         R_ie = Synapses(Pi, Pe, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-        R_ie.connect(p=p)
-        R_ie.w = w_ie_out + 0.1*w_ie_out*randn(len(R_ie.w))
-
+        I, J = get_out_group_connectivity(InputGroup[NE:], InputGroup[:NE], p)
+        R_ie.connect(i=I, j=J)
+        R_ie.w = w_ie_out + 1e-1*w_ie_out*randn(len(R_ie.w))
+    
         R_ii = Synapses(Pi, Pi, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-        R_ii.connect(p=p)
-        R_ii.w = w_ii_out + 0.1*w_ii_out*randn(len(R_ii.w))
+        I, J = get_out_group_connectivity(InputGroup[NE:], InputGroup[NE:], p)
+        R_ii.connect(i=I, j=J)
+        R_ii.w = w_ii_out + 1e-1*w_ii_out*randn(len(R_ii.w))
 
     #######################################
     # Recurrent connections Within Groups
