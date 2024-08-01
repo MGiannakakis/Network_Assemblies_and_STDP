@@ -1,4 +1,5 @@
 from brian2 import *
+from .Connectivity_Utils import *
 
 
 ########################

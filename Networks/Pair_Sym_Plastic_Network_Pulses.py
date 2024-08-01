@@ -1,5 +1,5 @@
 from brian2 import *
-from Connectivity_Utils import *
+from .Connectivity_Utils import *
 
 def Network_get_Stats(W = 0.0,
                 p = 0.0,
@@ -24,7 +24,7 @@ def Network_get_Stats(W = 0.0,
 
     tau_stdp = 10 * ms  # STDP time constant
 
-    learningtime = 100 * second  # Simulation time
+    learningtime = 600 * second  # Simulation time
     pulsetime = 1 * second
 
     gl = 10.0 * nsiemens  # Leak conductance
@@ -163,38 +163,38 @@ def Network_get_Stats(W = 0.0,
     Noise_Synapses = Synapses(Noise, P, on_pre='g_ampa += w_input*gBarEx*nS')
     Noise_Synapses.connect(condition='i==j')
                   
-  ########################
-  # Recurrent connections 
-  ########################
-  
-  # Inhibitory scaling
-  i_s = gBarEx/(gBarIn*(1-ExFrac))
-  
-  
-  if p > 0:
-      R_ee = Synapses(Pe, Pe, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-      I, J, W = get_recurrent_connectivity(InputGroup[:NE], InputGroup[:NE],
-                                           p, p, w_ee_in, w_ee_out)
-      R_ee.connect(i=I, j=J)
-      R_ee.w = W
-  
-      R_ei = Synapses(Pe, Pi, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
-      I, J, W = get_recurrent_connectivity(InputGroup[:NE], InputGroup[NE:],
-                                           p, p, w_ei_in, w_ei_out)
-      R_ei.connect(i=I, j=J)
-      R_ei.w = W
-  
-      R_ie = Synapses(Pi, Pe, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-      I, J, W = get_recurrent_connectivity(InputGroup[NE:], InputGroup[:NE],
-                                           p, p, w_ie_in, w_ie_out)
-      R_ie.connect(i=I, j=J)
-      R_ie.w = W
-  
-      R_ii = Synapses(Pi, Pi, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
-      I, J, W = get_recurrent_connectivity(InputGroup[NE:], InputGroup[NE:],
-                                           p, p, w_ii_in, w_ii_out)
-      R_ii.connect(i=I, j=J)
-      R_ii.w = W
+    ########################
+    # Recurrent connections 
+    ########################
+
+    # Inhibitory scaling
+    i_s = gBarEx/(gBarIn*(1-ExFrac))
+
+
+    if p > 0:
+        R_ee = Synapses(Pe, Pe, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
+        I, J, W = get_recurrent_connectivity(InputGroup[:NE], InputGroup[:NE],
+                                             p_ee_in, p_ee_out, w_ee_in, w_ee_out)
+        R_ee.connect(i=I, j=J)
+        R_ee.w = W
+    
+        R_ei = Synapses(Pe, Pi, model='w: 1', on_pre='g_ampa += w*gBarEx*nS')
+        I, J, W = get_recurrent_connectivity(InputGroup[:NE], InputGroup[NE:],
+                                             p_ei_in, p_ei_out, w_ei_in, w_ei_out)
+        R_ei.connect(i=I, j=J)
+        R_ei.w = W
+    
+        R_ie = Synapses(Pi, Pe, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
+        I, J, W = get_recurrent_connectivity(InputGroup[NE:], InputGroup[:NE],
+                                             p_ie_in, p_ie_out, w_ie_in, w_ie_out)
+        R_ie.connect(i=I, j=J)
+        R_ie.w = W
+    
+        R_ii = Synapses(Pi, Pi, model='w: 1', on_pre='g_gaba += i_s*w*gBarIn*nS')
+        I, J, W = get_recurrent_connectivity(InputGroup[NE:], InputGroup[NE:],
+                                             p_ii_in, p_ii_out, w_ii_in, w_ii_out)
+        R_ii.connect(i=I, j=J)
+        R_ii.w = W
 
     #############################
     # Excitatory Plasticity
